@@ -1,0 +1,28 @@
+{
+  "name": "tweezr",
+  "version": "1.0.0",
+  "description": "a library to reverse lookup values within a javascript object & generate the dot-notation query selectors in context to the specified object. You may also use it to \"walk\" through the structure one step at a time to read/write values.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dpnishant/tweezr.git"
+  },
+  "keywords": [
+    "reverse",
+    "lookup",
+    "traverse",
+    "and",
+    "edit",
+    "javascript",
+    "objects"
+  ],
+  "author": "Nishant Das Patnaik <nishant.dp@gmail.com> (nishant.daspatnaik.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dpnishant/tweezr/issues"
+  },
+  "homepage": "https://github.com/dpnishant/tweezr#readme"
+}
