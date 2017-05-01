@@ -64,21 +64,21 @@ var fs = require('fs');
 var tweezr = require('tweezr').init();
 
 fs.readFile("auto.json", 'utf8', function(err, data) {
-	var myObj = JSON.parse(data);
-	var keyword = 2015;
-	var result = tweezr.findAll(keyword, myObj, "myObj");
-	
-	console.log("\n1. current node: " + result[0].path);
-	console.log("\n2. parent node: " + result[0].parent().path);
-	console.log("\n3. parent node serialized: " + JSON.stringify(result[0].parent()));
-	console.log("\n\n4. previous sibling: " + result[0].prev().path);
-	console.log("5. previous sibling value: " + result[0].prev().val());
-	console.log("6. previous to previous sibling: " + result[0].prev().prev().path);
-	console.log("7. previous to previous sibling value: " + result[0].prev().prev().val());
-	console.log("\n8. next sibling: " + result[0].next().path);
-	console.log("9. next sibling value: " + result[0].next().val());
-	console.log("\n10. next to next sibling: " + result[0].next().next().path);
-	console.log("11. next to next sibling value: " + result[0].next().next().val());
+  var myObj = JSON.parse(data);
+  var keyword = 2015;
+  var result = tweezr.findAll(keyword, myObj, "myObj");
+  
+  console.log("\n1. current node: " + result[0].path);
+  console.log("\n2. parent node: " + result[0].parent().path);
+  console.log("\n3. parent node serialized: " + JSON.stringify(result[0].parent().haystack));
+  console.log("\n\n4. previous sibling: " + result[0].prev().path);
+  console.log("5. previous sibling value: " + result[0].prev().val());
+  console.log("6. previous to previous sibling: " + result[0].prev().prev().path);
+  console.log("7. previous to previous sibling value: " + result[0].prev().prev().val());
+  console.log("\n8. next sibling: " + result[0].next().path);
+  console.log("9. next sibling value: " + result[0].next().val());
+  console.log("\n10. next to next sibling: " + result[0].next().next().path);
+  console.log("11. next to next sibling value: " + result[0].next().next().val());
 });
 ```
 
@@ -86,11 +86,13 @@ fs.readFile("auto.json", 'utf8', function(err, data) {
 ```
 $ node runner.js
 
+
 1. current node: myObj.cars[2].year[2]
 
 2. parent node: myObj.cars[2].year
 
-3. parent node serialized: {"path":"myObj.cars[2].year","haystack":{"list":"automobiles","cars":[{"make":"bmw","model":"Q3","year":2012},{"make":"honda","model":"city","year":[2001,2004,2009]},{"make":"audi","model":"a4","year":[2013,2014,2015,2019,2021]}],"bikes":[{"make":"kawasaki","model":"ninja300","year":2013}],"dealers":""}}
+3. parent node serialized: {"list":"automobiles","cars":[{"make":"bmw","model":"Q3","year":2012},{"make":"honda","model":"city","year":[2001,2004,2009]},{"make":"audi","model":"a4","year":[2013,2014,2015,2019,2021]}],"bikes":[{"make":"kawasaki","model":"ninja300","year":2013}],"dealers":""}
+
 
 4. previous sibling: myObj.cars[2].year[1]
 5. previous sibling value: 2014
