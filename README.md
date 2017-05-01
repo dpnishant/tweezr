@@ -1,15 +1,15 @@
-#**tweezr**
+# **tweezr**
 
 a javascript library to reverse lookup values within a javascript object & generate the dot-notation query selectors in context to the specified object. You may also use it to "walk" through the structure one-step-at-a-time.
 
 
-##Install
+## Install
 
 `npm install tweezr`
 
-##Usage
+## Usage
 
-###Example JSON
+### Example JSON
 ```
 $ cat auto.json
  
@@ -55,7 +55,7 @@ $ cat auto.json
 
 
 
-###Example Usage
+### Example Usage
 
 ```
 $ cat runner.js
@@ -82,7 +82,7 @@ fs.readFile("auto.json", 'utf8', function(err, data) {
 });
 ```
 
-###Output
+### Output
 ```
 $ node runner.js
 
