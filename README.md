@@ -74,7 +74,7 @@ fs.readFile("auto.json", 'utf8', function(err, data) {
   
   console.log("\n1. current node: " + result[0].path);
   console.log("\n2. parent node: " + result[0].parent().path);
-  console.log("\n3. parent node serialized: " + JSON.stringify(result[0].parent().haystack));
+  console.log("\n3. parent node serialized: " + JSON.stringify(result[0].parent().obj));
   console.log("\n\n4. previous sibling: " + result[0].prev().path);
   console.log("5. previous sibling value: " + result[0].prev().val());
   console.log("6. previous to previous sibling: " + result[0].prev().prev().path);

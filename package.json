@@ -1,6 +1,6 @@
 {
   "name": "tweezr",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "a library to reverse lookup values within a javascript object & generate the dot-notation query selectors in context to the specified object. You may also use it to \"walk\" through the structure one step at a time to read/write values.",
   "main": "index.js",
   "scripts": {
