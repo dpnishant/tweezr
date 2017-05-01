@@ -304,7 +304,7 @@ function getSibling(selector, json, direction) {
 
 function Path(path, haystack) {
   this.path = path;
-  this.haystack = haystack;
+  this.obj = haystack;
 }
 
 Path.prototype.parent = function() {
@@ -315,29 +315,29 @@ Path.prototype.parent = function() {
   } else {
     selector = selector.substring(0, selector.lastIndexOf('.'));
   }
-  return new Path(selector, this.haystack);
+  return new Path(selector, this.obj);
 };
 
 Path.prototype.val = function() {
-  if (!this.path || !this.haystack) return undefined;
+  if (!this.path || !this.obj) return undefined;
   var rootObject = this.path.split('.');
-  rootObject[0] = 'this.haystack';
+  rootObject[0] = 'this.obj';
   var value = eval(rootObject.join('.'));
   return value;
 }
 
 Path.prototype.next = function() {
-  if (!this.path || !this.haystack) return undefined;
-  return new Path(getSibling(this.path, this.haystack, 'next'), this.haystack);
+  if (!this.path || !this.obj) return undefined;
+  return new Path(getSibling(this.path, this.obj, 'next'), this.obj);
 }
 
 Path.prototype.prev = function() {
-  if (!this.path || !this.haystack) return undefined;
-  return new Path(getSibling(this.path, this.haystack, 'previous'), this.haystack);
+  if (!this.path || !this.obj) return undefined;
+  return new Path(getSibling(this.path, this.obj, 'previous'), this.obj);
 }
 
 Path.prototype.addAfter = function() {
-  if(!this.path || !this.haystack) return undefined;
+  if(!this.path || !this.obj) return undefined;
   console.log(this.path);
 }
 
