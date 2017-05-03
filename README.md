@@ -14,7 +14,7 @@ a javascript library to reverse lookup values within a javascript object & gener
 ## Usage
 
 ### Example JSON
-```
+```javascript
 $ cat auto.json
  
 {
@@ -61,7 +61,7 @@ $ cat auto.json
 
 ### Example Usage
 
-```
+```javascript
 $ cat runner.js
 
 var fs = require('fs');
@@ -93,7 +93,7 @@ fs.readFile('auto.json', 'utf8', function(err, data) {
 ```
 
 ### Output
-```
+```shell
 $ node runner.js
 
 0. original object serialized: {"list":"automobiles","cars":[{"make":"bmw","model":"Q3","year":2012},{"make":"honda","model":"city","year":[2001,2004,2009]},{"make":"audi","model":"a4","year":[2013,2014,2015,2019,2021]}],"bikes":[{"make":"kawasaki","model":"ninja300","year":2013}],"dealers":""}
@@ -126,5 +126,52 @@ $ node runner.js
 14. updated object: {"list":"automobiles","cars":[{"make":"bmw","model":"Q3","year":2012},{"make":"honda","model":"city","year":[2001,2004,2009]},{"make":"audi","model":"a4","year":[2013,2014,[1,2,3],2015,1111,2019,2021]}],"bikes":[{"make":"kawasaki","model":"ninja300","year":2013}],"dealers":""}
 ```
 
+# Documentation
 
+## .init( _{debug: boolean}_ )
 
+## .findAll(varKeyword, objContextObject, strContextObjectLiteral)
+**Returns:** An array of selector objects    
+**Arguments**:    
+    - **varKeyword**: The item to be searched, sensitive of data-type and value    
+    - **objContextObject**: The identifier of the _haystack_ object (i.e. the object to search in)    
+    - **strContextObjectLiteral**: The literal value of the _haystack_ object identifier     
+
+## .path
+**Type:** Attribute    
+**Value:** the dot-notation selector query in context to objContextObject    
+
+## .obj
+**Type:** Attribute    
+**Value:** unserialized value of objContextObject    
+
+## .val()
+**Type:** Getter    
+**Returns:** The raw value of the current selector    
+
+## .parent()
+**Type:** Getter     
+**Returns:** the parent node of the current selector    
+
+## .prev()
+**Type:** Getter    
+**Returns:** the previous node of the current selector    
+
+## .next()
+**Type:** Getter    
+**Returns:** the next node of the current selector     
+
+## .addAfter(varToInsert)
+**Type:** Setter    
+**Sets:** Sets varToInsert as the raw value of the next node of the current selector      
+**Returns:** the selector object of the newly added node    
+
+## .addBefore(varToInsert)
+**Type:** Setter    
+**Sets:** Sets varToInsert as the raw value of the previous node of the current selector    
+**Returns:** the selector object of the newly added node    
+
+## .replace(varToReplace)
+**Type:** Setter    
+**Sets:** Sets varToInsert as the raw value of the currently selected node    
+**Returns:** the selector object of the same node    
