@@ -54,7 +54,7 @@ function savePath(stack) {
 function isObjEqual(a, b) {
   var aProps = Object.getOwnPropertyNames(a);
   var bProps = Object.getOwnPropertyNames(b);
-  if (aProps.length != bProps.length) {
+  if (aProps.length !== bProps.length) {
     return false;
   }
   for (var i = 0; i < aProps.length; i++) {
@@ -201,7 +201,6 @@ function searchInObject(haystack, needle) {
   var type = typeof(haystack);
 
   switch (type) {
-
     case 'object':
       if (haystack instanceof Array) {
         if (debug) console.log('===========LEFT {search} to {findInArray}================');
@@ -210,6 +209,7 @@ function searchInObject(haystack, needle) {
         if (debug) console.log('===========LEFT {search} to {findInObject}================');
         var result = findInObject(haystack, needle);
       }
+      break;
 
     default:
       if (needle === haystack) {
@@ -218,6 +218,7 @@ function searchInObject(haystack, needle) {
         result = false;
         savePath(stack);
       }
+      break;
   }
   if (result) {
     if (debug) console.log('[INFO] (search) Found ' + JSON.stringify(needle) + ' in ' + JSON.stringify(result));
@@ -227,15 +228,6 @@ function searchInObject(haystack, needle) {
   popState(stack, '{search}');
   if (debug) console.log('===========LEFT {search}================');
   return false;
-}
-
-// Duplicate definition of getParent to deal with scoping issues
-function getParentNode(selector) {
-  if (selector.endsWith(']')) {
-    return selector.substring(0, selector.lastIndexOf('['));
-  } else {
-    return selector.substring(0, selector.lastIndexOf('.'));
-  }
 }
 
 function getSibling(selector, json, direction) {
@@ -281,6 +273,7 @@ function getSibling(selector, json, direction) {
           }
         }
       }
+      break;
     case 'next':
       if (!isNaN(bookmark)) {
         var index = bookmark + 1;
@@ -299,61 +292,135 @@ function getSibling(selector, json, direction) {
           }
         }
       }
+      break;
   }
 }
 
-function Path(path, haystack) {
+// Duplicate definition of getParent to deal with scoping issues
+function getParentNode(strSelector) {
+  if (strSelector.endsWith(']')) {
+    if (debug) console.log('getParentNode: ' + strSelector.substring(0, strSelector.lastIndexOf('[')));
+    return strSelector.substring(0, strSelector.lastIndexOf('['));
+  } else {
+    if (debug) console.log('getParentNode: ' + strSelector.substring(0, strSelector.lastIndexOf('.')));
+    return strSelector.substring(0, strSelector.lastIndexOf('.'));
+  }
+}
+
+function isSelectorArray(strSelector) {
+  if(strSelector.endsWith(']')) {
+    if (debug) console.log('isSelectorArray: ' + true);
+    return true;
+  } else {
+    if (debug) console.log('isSelectorArray: ' + false);
+    return false;
+  }
+}
+
+function getCurrentIndex(strSelector) {
+  var startPos = strSelector.lastIndexOf('[') + 1;
+  var endPos = strSelector.length - 1;
+  if(isSelectorArray(strSelector)) {
+    if (debug) console.log('getCurrentIndex: ' + parseInt(strSelector.substring(startPos, endPos)));
+    return parseInt(strSelector.substring(strSelector.lastIndexOf('[')+1, strSelector.length-1));
+  } else return undefined;
+}
+
+function Element(path, haystack) {
   this.path = path;
   this.obj = haystack;
 }
 
-Path.prototype.parent = function() {
+Element.prototype.parent = function() {
   if (!this.path) return undefined;
-  var selector = this.path
+  var selector = this.path;
   if (selector.endsWith(']')) {
     selector = selector.substring(0, selector.lastIndexOf('['));
   } else {
     selector = selector.substring(0, selector.lastIndexOf('.'));
   }
-  return new Path(selector, this.obj);
+  return new Element(selector, this.obj);
 };
 
-Path.prototype.val = function() {
+Element.prototype.val = function() {
   if (!this.path || !this.obj) return undefined;
   var rootObject = this.path.split('.');
   rootObject[0] = 'this.obj';
-  var value = eval(rootObject.join('.'));
-  return value;
-}
+  //var value = eval(rootObject.join('.'));
+  //return value;
+  return eval(rootObject.join('.'));
+};
 
-Path.prototype.next = function() {
+Element.prototype.next = function() {
   if (!this.path || !this.obj) return undefined;
-  return new Path(getSibling(this.path, this.obj, 'next'), this.obj);
-}
+  return new Element(getSibling(this.path, this.obj, 'next'), this.obj);
+};
 
-Path.prototype.prev = function() {
+Element.prototype.prev = function() {
   if (!this.path || !this.obj) return undefined;
-  return new Path(getSibling(this.path, this.obj, 'previous'), this.obj);
-}
+  return new Element(this.path, this.obj);
+};
 
-Path.prototype.addAfter = function() {
-  if(!this.path || !this.obj) return undefined;
-  console.log(this.path);
-}
+Element.prototype.addAfter = function(toInsert) {
+  if(!toInsert) return undefined;
+  if (debug) console.log('this.path: ' + this.path)
+  if (isSelectorArray(this.path)) {
+    var currentIndex = getCurrentIndex(this.path) + 1;
+    if (debug) console.log('currentIndex: ' + currentIndex);
+    if (debug) console.log(getParentNode(this.path) + ".splice(" + currentIndex + ", 0, " + JSON.stringify(toInsert) + ")");
+    var newSelector = getParentNode(this.path).split('.');
+    newSelector.splice(0, 1, 'this.obj');
+    newSelector = newSelector.join('.');
+    if (debug) console.log(newSelector);
+    eval(newSelector + ".splice(" + currentIndex + ", 0, " + toInsert + ")");
+  }
+  return new Element(getSibling(this.path, this.obj, 'next'), this.obj);
+};
 
-var jsonq = {
+Element.prototype.addBefore = function(toInsert) {
+  if(!toInsert) return undefined;
+  if(isSelectorArray(this.path)) {
+    var currentIndex = getCurrentIndex(this.path) - 1;
+    if (debug) console.log(getParentNode(this.path) + ".splice(" + currentIndex + ", 0, " + JSON.stringify(toInsert) + ")");
+    var newSelector = getParentNode(this.path).split('.');
+    newSelector.splice(0, 1, 'this.obj');
+    newSelector = newSelector.join('.');
+    if (debug) console.log('addBefore.newSelector: ' + newSelector);
+    eval(newSelector + ".splice(" + currentIndex + ", 0, " + toInsert + ")");
+  }
+  return new Element(getSibling(this.path, this.obj, 'previous'), this.obj);
+};
+
+Element.prototype.replace = function(value) {
+if(!value) return undefined;
+  var newSelector = this.path.split('.');
+  newSelector.splice(0, 1, 'this.obj');
+  newSelector = newSelector.join('.');
+  if(typeof value === "string") {
+    if (debug) console.log('assign str: ' + newSelector + ' = \"' + value + '\";');
+    eval(newSelector + ' = \"' + value + '\";');
+  } else if (typeof value === "object") {
+    if (debug) console.log('assign obj: ' + newSelector + ' = ' + JSON.stringify(value) + ';');
+    eval(newSelector + ' = ' + JSON.stringify(value) + ';');
+  } else {
+    eval(newSelector + ' = ' + value.toString() + ';');
+  }
+  return new Element(this.path, this.obj);
+};
+
+var tweezr = {
   findAll: function(keyword, objHaystack, strContext, callback) {
     paths = [];
-    var pathObject = [];
+    var Elements = [];
     searchInObject(objHaystack, keyword); // paths[] enumerated
-    var allselectors = prepareSelectors(paths, strContext);
-    for (var i = 0; i < allselectors.length; i++) {
-      pathObject.push(new Path(allselectors[i], objHaystack));
+    var allSelectors = prepareSelectors(paths, strContext);
+    for (var i = 0; i < allSelectors.length; i++) {
+        Elements.push(new Element(allSelectors[i], objHaystack));
     }
     if (callback) {
-      callback(pathObject);
+      callback(Elements);
     } else {
-      return pathObject;
+      return Elements;
     }
   },
 
@@ -371,12 +438,12 @@ var jsonq = {
       return json;
     }
   }
-}
+};
 
 module.exports = {
   init: function(options) {
-    options = {} || options;
+    options = options || {};
     debug = options && options.debug || false;
-    return jsonq;
+    return tweezr;
   }
-}
+};
