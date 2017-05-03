@@ -65,24 +65,30 @@ $ cat auto.json
 $ cat runner.js
 
 var fs = require('fs');
-var tweezr = require('tweezr').init();
+var tweezr = require('tweezr').init({debug: false});
 
-fs.readFile("auto.json", 'utf8', function(err, data) {
+fs.readFile('auto.json', 'utf8', function(err, data) {
   var myObj = JSON.parse(data);
   var keyword = 2015;
-  var result = tweezr.findAll(keyword, myObj, "myObj");
+  var result = tweezr.findAll(keyword, myObj, 'myObj');
   
-  console.log("\n1. current node: " + result[0].path);
-  console.log("\n2. parent node: " + result[0].parent().path);
-  console.log("\n3. parent node serialized: " + JSON.stringify(result[0].parent().obj));
-  console.log("\n\n4. previous sibling: " + result[0].prev().path);
-  console.log("5. previous sibling value: " + result[0].prev().val());
-  console.log("6. previous to previous sibling: " + result[0].prev().prev().path);
-  console.log("7. previous to previous sibling value: " + result[0].prev().prev().val());
-  console.log("\n8. next sibling: " + result[0].next().path);
-  console.log("9. next sibling value: " + result[0].next().val());
-  console.log("\n10. next to next sibling: " + result[0].next().next().path);
-  console.log("11. next to next sibling value: " + result[0].next().next().val());
+  console.log('\n0. original object serialized: ' + JSON.stringify(myObj));
+  console.log('\n1. path of 1st node found: ' + result[0].path);
+  console.log('\n2. path of parent node: ' + result[0].parent().path);
+  console.log('\n3. parent node serialized: ' + JSON.stringify(result[0].parent().obj));
+  console.log('\n\n4. path of previous sibling: ' + result[0].prev().path);
+  console.log('5. raw value of previous sibling value: ' + result[0].prev().val());
+  console.log('6. path of previous to previous sibling: ' + result[0].prev().prev().path);
+  console.log('7. raw value of previous to previous sibling value: ' + result[0].prev().prev().val());
+  console.log('\n8. path of next sibling: ' + result[0].next().path);
+  console.log('9. raw value of next sibling value: ' + result[0].next().val());
+  console.log('\n10. path of next to next sibling: ' + result[0].next().next().path);
+  console.log('11. raw value of next to next sibling value: ' + result[0].next().next().val());
+  console.log('\n12. addAfter: ' + result[0].addAfter(1111).path);
+  console.log('13. add before next sibling: ' + result[0].next().addBefore(2222).path);
+  console.log('\n14. updated object serialized: ' + JSON.stringify(myObj));
+  console.log('\n15. replace a value: ' + result[0].replace([1,2,3]).val());
+  console.log('\n14. updated object: ' + JSON.stringify(myObj));
 });
 ```
 
@@ -90,24 +96,34 @@ fs.readFile("auto.json", 'utf8', function(err, data) {
 ```
 $ node runner.js
 
+0. original object serialized: {"list":"automobiles","cars":[{"make":"bmw","model":"Q3","year":2012},{"make":"honda","model":"city","year":[2001,2004,2009]},{"make":"audi","model":"a4","year":[2013,2014,2015,2019,2021]}],"bikes":[{"make":"kawasaki","model":"ninja300","year":2013}],"dealers":""}
 
-1. current node: myObj.cars[2].year[2]
+1. path of 1st node found: myObj.cars[2].year[2]
 
-2. parent node: myObj.cars[2].year
+2. path of parent node: myObj.cars[2].year
 
 3. parent node serialized: {"list":"automobiles","cars":[{"make":"bmw","model":"Q3","year":2012},{"make":"honda","model":"city","year":[2001,2004,2009]},{"make":"audi","model":"a4","year":[2013,2014,2015,2019,2021]}],"bikes":[{"make":"kawasaki","model":"ninja300","year":2013}],"dealers":""}
 
 
-4. previous sibling: myObj.cars[2].year[1]
-5. previous sibling value: 2014
-6. previous to previous sibling: myObj.cars[2].year[0]
-7. previous to previous sibling value: 2013
+4. path of previous sibling: myObj.cars[2].year[2]
+5. raw value of previous sibling value: 2015
+6. path of previous to previous sibling: myObj.cars[2].year[2]
+7. raw value of previous to previous sibling value: 2015
 
-8. next sibling: myObj.cars[2].year[3]
-9. next sibling value: 2019
+8. path of next sibling: myObj.cars[2].year[3]
+9. raw value of next sibling value: 2019
 
-10. next to next sibling: myObj.cars[2].year[4]
-11. next to next sibling value: 2021
+10. path of next to next sibling: myObj.cars[2].year[4]
+11. raw value of next to next sibling value: 2021
+
+12. addAfter: myObj.cars[2].year[3]
+13. add before next sibling: myObj.cars[2].year[2]
+
+14. updated object serialized: {"list":"automobiles","cars":[{"make":"bmw","model":"Q3","year":2012},{"make":"honda","model":"city","year":[2001,2004,2009]},{"make":"audi","model":"a4","year":[2013,2014,2222,2015,1111,2019,2021]}],"bikes":[{"make":"kawasaki","model":"ninja300","year":2013}],"dealers":""}
+
+15. replace a value: 1,2,3
+
+14. updated object: {"list":"automobiles","cars":[{"make":"bmw","model":"Q3","year":2012},{"make":"honda","model":"city","year":[2001,2004,2009]},{"make":"audi","model":"a4","year":[2013,2014,[1,2,3],2015,1111,2019,2021]}],"bikes":[{"make":"kawasaki","model":"ninja300","year":2013}],"dealers":""}
 ```
 
 
