@@ -1,7 +1,8 @@
+[![NPM](https://nodei.co/npm/tweezr.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/tweezr/)
+
 # **tweezr**
 
 a javascript library to reverse lookup values within a javascript object & generate the dot-notation query selectors in context to the specified object. You may also use it to "walk" through the structure one-step-at-a-time.
-
 
 ## Acknowledgments/Credits
 * [Piyush Pattanayak](https://www.linkedin.com/in/piyush-pattanayak-0341a59/) - Thank you for helping with method chaining & several other valuable brainstorming sessions.
