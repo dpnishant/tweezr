@@ -76,7 +76,7 @@ fs.readFile('auto.json', 'utf8', function(err, data) {
   console.log('\n0. original object serialized: ' + JSON.stringify(myObj));
   console.log('\n1. path of 1st node found: ' + result[0].path);
   console.log('\n2. path of parent node: ' + result[0].parent().path);
-  console.log('\n3. parent node serialized: ' + JSON.stringify(result[0].parent().obj));
+  console.log('\n3. parent node serialized: ' + JSON.stringify(result[0].parent().val()));
   console.log('\n\n4. path of previous sibling: ' + result[0].prev().path);
   console.log('5. raw value of previous sibling value: ' + result[0].prev().val());
   console.log('6. path of previous to previous sibling: ' + result[0].prev().prev().path);
@@ -103,7 +103,7 @@ $ node runner.js
 
 2. path of parent node: myObj.cars[2].year
 
-3. parent node serialized: {"list":"automobiles","cars":[{"make":"bmw","model":"Q3","year":2012},{"make":"honda","model":"city","year":[2001,2004,2009]},{"make":"audi","model":"a4","year":[2013,2014,2015,2019,2021]}],"bikes":[{"make":"kawasaki","model":"ninja300","year":2013}],"dealers":""}
+3. parent node serialized: [2013,2014,2015,2019,2021]
 
 
 4. path of previous sibling: myObj.cars[2].year[2]
