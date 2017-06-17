@@ -88,7 +88,7 @@ fs.readFile('auto.json', 'utf8', function(err, data) {
   console.log('13. add before next sibling: ' + result[0].next().addBefore(2222).path);
   console.log('14. updated object serialized: ' + JSON.stringify(myObj));
   console.log('15. replace a value: ' + result[0].replace([1,2,3]).val());
-  console.log('14. updated object: ' + JSON.stringify(myObj));
+  console.log('16. updated object: ' + JSON.stringify(myObj));
 });
 ```
 
@@ -99,30 +99,50 @@ $ node runner.js
 #console.log('1. path of 1st node found: ' + result[0].path);
 1. path of 1st node found: myObj.cars[2].year[2]
 
+#console.log('2. path of parent node: ' + result[0].parent().path);
 2. path of parent node: myObj.cars[2].year
 
+#console.log('3. parent node serialized: ' + JSON.stringify(result[0].parent().val()));
 3. parent node serialized: [2013,2014,2015,2019,2021]
 
-
+#console.log('4. path of previous sibling: ' + result[0].prev().path);
 4. path of previous sibling: myObj.cars[2].year[2]
+
+#console.log('5. raw value of previous sibling value: ' + result[0].prev().val());
 5. raw value of previous sibling value: 2015
+
+#console.log('6. path of previous to previous sibling: ' + result[0].prev().prev().path);
 6. path of previous to previous sibling: myObj.cars[2].year[2]
+
+#console.log('7. raw value of previous to previous sibling value: ' + result[0].prev().prev().val());
 7. raw value of previous to previous sibling value: 2015
 
+#console.log('8. path of next sibling: ' + result[0].next().path);
 8. path of next sibling: myObj.cars[2].year[3]
+
+#console.log('9. raw value of next sibling value: ' + result[0].next().val());
 9. raw value of next sibling value: 2019
 
+#console.log('10. path of next to next sibling: ' + result[0].next().next().path);
 10. path of next to next sibling: myObj.cars[2].year[4]
+
+#console.log('11. raw value of next to next sibling value: ' + result[0].next().next().val());
 11. raw value of next to next sibling value: 2021
 
+#console.log('12. addAfter: ' + result[0].addAfter(1111).path);
 12. addAfter: myObj.cars[2].year[3]
+
+#console.log('13. add before next sibling: ' + result[0].next().addBefore(2222).path);
 13. add before next sibling: myObj.cars[2].year[2]
 
+#console.log('14. updated object serialized: ' + JSON.stringify(myObj));
 14. updated object serialized: {"list":"automobiles","cars":[{"make":"bmw","model":"Q3","year":2012},{"make":"honda","model":"city","year":[2001,2004,2009]},{"make":"audi","model":"a4","year":[2013,2014,2222,2015,1111,2019,2021]}],"bikes":[{"make":"kawasaki","model":"ninja300","year":2013}],"dealers":""}
 
+#console.log('15. replace a value: ' + result[0].replace([1,2,3]).val());
 15. replace a value: 1,2,3
 
-14. updated object: {"list":"automobiles","cars":[{"make":"bmw","model":"Q3","year":2012},{"make":"honda","model":"city","year":[2001,2004,2009]},{"make":"audi","model":"a4","year":[2013,2014,[1,2,3],2015,1111,2019,2021]}],"bikes":[{"make":"kawasaki","model":"ninja300","year":2013}],"dealers":""}
+#console.log('16. updated object: ' + JSON.stringify(myObj));
+16. updated object: {"list":"automobiles","cars":[{"make":"bmw","model":"Q3","year":2012},{"make":"honda","model":"city","year":[2001,2004,2009]},{"make":"audi","model":"a4","year":[2013,2014,[1,2,3],2015,1111,2019,2021]}],"bikes":[{"make":"kawasaki","model":"ninja300","year":2013}],"dealers":""}
 ```
 
 # Documentation
