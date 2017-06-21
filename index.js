@@ -5,6 +5,7 @@ var stack = 'init';
 var paths = [];
 
 function prepareSelectors(paths, root) {
+  if (debug) console.log('[INFO] paths : ' + JSON.stringify(paths));
   var sPaths = [];
   for (var i = 0; i < paths.length; i++) {
     var val = '';
@@ -14,16 +15,21 @@ function prepareSelectors(paths, root) {
       var node = objPath[key];
       if (node !== null) {
         if (isNaN(node)) {
-          val += node + '.'
+          if (node === 'root' && objKeys.indexOf(key) === 0) { // check if the first node value is "root"
+            val += node.toString();
+          } else {
+            val += '[\'' + node.toString().replace('\'', '\\\'') + '\']'; // val += node + '.';
+          }
         } else {
-          val += '[' + node.toString() + ']' + '.';
+          val += '[' + node.toString() + ']';
         }
       }
     });
-    var sPath = val.slice(0, -1).replace(/^root/g, root).replace(/\.\[/g, '[');
+    var sPath = val.replace(/^root/g, root).replace(/\.\[/g, '[');
     sPaths.push(sPath)
   }
   paths = [];
+  if (debug) console.log('[INFO] sPaths : ' + JSON.stringify(sPaths));
   return sPaths;
 }
 
@@ -232,7 +238,7 @@ function searchInObject(haystack, needle) {
 
 function getSibling(selector, json, direction) {
   //replace the original object's literal name with "json"
-  var strOriginalContext = selector.substring(0, selector.indexOf('.'));
+  var strOriginalContext = selector.substring(0, selector.indexOf('[')); // var strOriginalContext = selector.substring(0, selector.indexOf('.'));
   selector = selector.replace(strOriginalContext, "json");
   if (!selector || !json || !direction) return undefined;
   var found = false;
@@ -260,14 +266,14 @@ function getSibling(selector, json, direction) {
         var index = bookmark - 1;
         index = index < 0 ? undefined : index;
         if(index === undefined) return undefined;
-        var strNewContext = parentSelector.substring(0, parentSelector.indexOf('.'));
+        var strNewContext = parentSelector.substring(0, parentSelector.indexOf('[')); // var strNewContext = parentSelector.substring(0, parentSelector.indexOf('.'));
         parentSelector = parentSelector.replace("json", strOriginalContext);
         return parentSelector + '[' + index + ']';
       } else {
         for (var i = 0; i < keys.length; i++) {
           if (keys[i] === bookmark) {
             if (!keys[i - 1]) return undefined;
-            var strNewContext = parentSelector.substring(0, parentSelector.indexOf('.'));
+            var strNewContext = parentSelector.substring(0, parentSelector.indexOf('[')); // var strNewContext = parentSelector.substring(0, parentSelector.indexOf('.'));
             parentSelector = parentSelector.replace("json", strOriginalContext);
             return parentSelector + '.' + keys[i - 1];
           }
@@ -279,14 +285,14 @@ function getSibling(selector, json, direction) {
         var index = bookmark + 1;
         index = index >= parentObject.length ? undefined : index
         if(index === undefined) return undefined;
-        var strNewContext = parentSelector.substring(0, parentSelector.indexOf('.'));
+        var strNewContext = parentSelector.substring(0, parentSelector.indexOf('[')); // var strNewContext = parentSelector.substring(0, parentSelector.indexOf('.'));
         parentSelector = parentSelector.replace("json", strOriginalContext);
         return parentSelector + '[' + index + ']';
       } else {
         for (var i = 0; i < keys.length; i++) {
           if (keys[i] === bookmark) {
             if (!keys[i + 1]) return undefined;
-            var strNewContext = parentSelector.substring(0, parentSelector.indexOf('.'));
+            var strNewContext = parentSelector.substring(0, parentSelector.indexOf('[')); // var strNewContext = parentSelector.substring(0, parentSelector.indexOf('.'));
             parentSelector = parentSelector.replace("json", strOriginalContext);
             return parentSelector + '.' + keys[i + 1];
           }
@@ -344,11 +350,8 @@ Element.prototype.parent = function() {
 
 Element.prototype.val = function() {
   if (!this.path || !this.obj) return undefined;
-  var rootObject = this.path.split('.');
-  rootObject[0] = 'this.obj';
-  //var value = eval(rootObject.join('.'));
-  //return value;
-  return eval(rootObject.join('.'));
+  var rootObject = this.path.replace(this.path.substring(0, this.path.indexOf('[')), 'this.obj');
+  return eval(rootObject);
 };
 
 Element.prototype.next = function() {
@@ -368,9 +371,9 @@ Element.prototype.addAfter = function(toInsert) {
     var currentIndex = getCurrentIndex(this.path) + 1;
     if (debug) console.log('currentIndex: ' + currentIndex);
     if (debug) console.log(getParentNode(this.path) + ".splice(" + currentIndex + ", 0, " + JSON.stringify(toInsert) + ")");
-    var newSelector = getParentNode(this.path).split('.');
-    newSelector.splice(0, 1, 'this.obj');
-    newSelector = newSelector.join('.');
+    var newSelector = getParentNode(this.path); //var newSelector = getParentNode(this.path).split('.');
+    newSelector = newSelector.replace(this.path.substring(0, this.path.indexOf('[')), 'this.obj'); // newSelector.splice(0, 1, 'this.obj');
+    //newSelector = newSelector.join('.');
     if (debug) console.log(newSelector);
     eval(newSelector + ".splice(" + currentIndex + ", 0, " + toInsert + ")");
   }
@@ -382,9 +385,9 @@ Element.prototype.addBefore = function(toInsert) {
   if(isSelectorArray(this.path)) {
     var currentIndex = getCurrentIndex(this.path) - 1;
     if (debug) console.log(getParentNode(this.path) + ".splice(" + currentIndex + ", 0, " + JSON.stringify(toInsert) + ")");
-    var newSelector = getParentNode(this.path).split('.');
-    newSelector.splice(0, 1, 'this.obj');
-    newSelector = newSelector.join('.');
+    var newSelector = getParentNode(this.path); // var newSelector = getParentNode(this.path).split('.');
+    newSelector = newSelector.replace(this.path.substring(0, this.path.indexOf('[')), 'this.obj'); // newSelector.splice(0, 1, 'this.obj');
+    // newSelector = newSelector.join('.');
     if (debug) console.log('addBefore.newSelector: ' + newSelector);
     eval(newSelector + ".splice(" + currentIndex + ", 0, " + toInsert + ")");
   }
@@ -393,9 +396,9 @@ Element.prototype.addBefore = function(toInsert) {
 
 Element.prototype.replace = function(value) {
 if(!value) return undefined;
-  var newSelector = this.path.split('.');
-  newSelector.splice(0, 1, 'this.obj');
-  newSelector = newSelector.join('.');
+  var newSelector = this.path; // var newSelector = this.path.split('.');
+  newSelector = newSelector.replace(this.path.substring(0, this.path.indexOf('[')), 'this.obj'); // newSelector.splice(0, 1, 'this.obj');
+  // newSelector = newSelector.join('.');
   if(typeof value === "string") {
     if (debug) console.log('assign str: ' + newSelector + ' = \"' + value + '\";');
     eval(newSelector + ' = \"' + value + '\";');
