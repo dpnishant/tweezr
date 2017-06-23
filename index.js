@@ -244,10 +244,9 @@ function getSibling(selector, json, direction) {
   var found = false;
   var nextSiblingValue = null;
   if (selector === undefined) return undefined;
-  if (selector.endsWith(']')) {
-    var bookmark = parseInt(selector.split('[').pop(-1).split(']')[0]);
-  } else {
-    var bookmark = selector.split('.').slice(-1)[0];
+  var bookmark = parseInt(selector.split('[').pop(-1).split(']')[0]);
+  if (isNaN(bookmark)) {
+    bookmark = selector.split('[').pop(-1).split(']')[0].replace(/^'/gi, '').replace(/'$/gi, '');
   }
   if (debug) console.log('selector: ' + selector);
   if (debug) console.log('bookmark: ' + bookmark);
@@ -275,7 +274,7 @@ function getSibling(selector, json, direction) {
             if (!keys[i - 1]) return undefined;
             var strNewContext = parentSelector.substring(0, parentSelector.indexOf('[')); // var strNewContext = parentSelector.substring(0, parentSelector.indexOf('.'));
             parentSelector = parentSelector.replace("json", strOriginalContext);
-            return parentSelector + '.' + keys[i - 1];
+            return parentSelector + '[\'' + keys[i - 1] + '\']';
           }
         }
       }
@@ -294,7 +293,7 @@ function getSibling(selector, json, direction) {
             if (!keys[i + 1]) return undefined;
             var strNewContext = parentSelector.substring(0, parentSelector.indexOf('[')); // var strNewContext = parentSelector.substring(0, parentSelector.indexOf('.'));
             parentSelector = parentSelector.replace("json", strOriginalContext);
-            return parentSelector + '.' + keys[i + 1];
+            return parentSelector + '[\'' + keys[i + 1] + '\']';
           }
         }
       }
@@ -361,7 +360,7 @@ Element.prototype.next = function() {
 
 Element.prototype.prev = function() {
   if (!this.path || !this.obj) return undefined;
-  return new Element(this.path, this.obj);
+  return new Element(getSibling(this.path, this.obj, 'previous'), this.obj);
 };
 
 Element.prototype.addAfter = function(toInsert) {
