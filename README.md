@@ -67,7 +67,7 @@ $ cat runner.js
 
 var fs = require('fs');
 var tweezr = require('tweezr').init({debug: false});
-
+ 
 fs.readFile('auto.json', 'utf8', function(err, data) {
   var myObj = JSON.parse(data);
   var keyword = 2015;
@@ -75,12 +75,14 @@ fs.readFile('auto.json', 'utf8', function(err, data) {
   
   console.log('1. path of 1st node found: ' + result[0].path);
   console.log('2. path of parent node: ' + result[0].parent().path);
+  console.log('2.1. key of parent node: ' + result[0].parent().key());
   console.log('3. parent node serialized: ' + JSON.stringify(result[0].parent().val()));
   console.log('4. path of previous sibling: ' + result[0].prev().path);
   console.log('5. raw value of previous sibling value: ' + result[0].prev().val());
   console.log('6. path of previous to previous sibling: ' + result[0].prev().prev().path);
   console.log('7. raw value of previous to previous sibling value: ' + result[0].prev().prev().val());
   console.log('8. path of next sibling: ' + result[0].next().path);
+  console.log('8.1. key of next sibling: ' + result[0].next().key());
   console.log('9. raw value of next sibling value: ' + result[0].next().val());
   console.log('10. path of next to next sibling: ' + result[0].next().next().path);
   console.log('11. raw value of next to next sibling value: ' + result[0].next().next().val());
@@ -102,6 +104,9 @@ $ node runner.js
 #console.log('2. path of parent node: ' + result[0].parent().path);
 2. path of parent node: myObj['cars'][2]['year']
 
+#console.log('2.1. key of parent node: ' + result[0].parent().key());
+2.1. key of parent node: year
+
 #console.log('3. parent node serialized: ' + JSON.stringify(result[0].parent().val()));
 3. parent node serialized: [2013,2014,2015,2019,2021]
 
@@ -119,6 +124,9 @@ $ node runner.js
 
 #console.log('8. path of next sibling: ' + result[0].next().path);
 8. path of next sibling: myObj['cars'][2]['year'][3]
+
+#console.log('8.1. key of next sibling: ' + result[0].next().key());
+8.1. key of next sibling: 3
 
 #console.log('9. raw value of next sibling value: ' + result[0].next().val());
 9. raw value of next sibling value: 2019
@@ -164,9 +172,13 @@ $ node runner.js
 **Type:** Attribute    
 **Value:** unserialized value of objContextObject    
 
+## .key()
+**Type:** Getter
+**Returns:** the key of the key/value pair of the current selector
+
 ## .val()
 **Type:** Getter    
-**Returns:** The raw value of the current selector    
+**Returns:** the value of the key/value of the current selector    
 
 ## .parent()
 **Type:** Getter     
