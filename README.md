@@ -173,7 +173,7 @@ $ node runner.js
 **Value:** unserialized value of objContextObject    
 
 ## .key()
-**Type:** Getter
+**Type:** Getter     
 **Returns:** the key of the key/value pair of the current selector
 
 ## .val()
