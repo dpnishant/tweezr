@@ -2,17 +2,16 @@
 
 # **tweezr**
 
-a library to reverse search values within a JSON structure or a javascript object & generate the dot-notation query selectors in context of the specified object. You may also use it to \"walk\" through the structure one step at a time to read/write values. Think of it as a XPath generator of any value that matches with your search keyword.
+a library to reverse search values within a JSON structure or a javascript object & generate the dot-notation query selectors in context of the specified object. You may also use it to \"walk\" through the structure one step at a time to read/write values. Think of it as a XPath generator for a value that matches the search keyword.
 
-## Acknowledgments/Credits
-* [Piyush Pattanayak](https://www.linkedin.com/in/piyush-pattanayak-0341a59/) - Thank you for helping with method chaining & several other valuable brainstorming sessions.
-* [Somasish Sahoo](https://www.linkedin.com/in/somasish/) -  Thank you for the numerous hours of valuable brainstorming sessions.
+|![](https://raw.githubusercontent.com/dpnishant/tweezr/master/res/tweezr_intro.png)|
+|:-:|
 
 ## Install
 
 `npm install tweezr`
 
-## Usage
+## Quickstart
 
 ### Example JSON
 ```javascript
@@ -205,4 +204,10 @@ $ node runner.js
 ## .replace(varToReplace)
 **Type:** Setter    
 **Sets:** Sets varToInsert as the raw value of the currently selected node    
-**Returns:** the selector object of the same node    
+**Returns:** the selector object of the same node        
+
+
+
+# Acknowledgments/Credits
+* [Piyush Pattanayak](https://www.linkedin.com/in/piyush-pattanayak-0341a59/) - Thank you for helping with method chaining & several other valuable brainstorming sessions.
+* [Somasish Sahoo](https://www.linkedin.com/in/somasish/) -  Thank you for the numerous hours of valuable brainstorming sessions.
