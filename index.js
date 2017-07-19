@@ -4,6 +4,17 @@ var debug = false;
 var stack = 'init';
 var paths = [];
 
+function unique(arr) {
+  var hash = {}, result = [];
+  for ( var i = 0, l = arr.length; i < l; ++i ) {
+    if ( !hash.hasOwnProperty(arr[i]) ) { //it works with objects! in FF, at least
+      hash[ arr[i] ] = true;
+      result.push(arr[i]);
+    }
+  }
+  return result;
+}
+
 function prepareSelectors(paths, root) {
   if (debug) console.log('[INFO] paths : ' + JSON.stringify(paths));
   var sPaths = [];
@@ -12,6 +23,7 @@ function prepareSelectors(paths, root) {
     var objPath = paths[i];
     var objKeys = Object.keys(objPath);
     objKeys.forEach(function(key) {
+      if (debug) console.log('[INFO] val: ' + val);
       var node = objPath[key];
       if (node !== null) {
         if (isNaN(node)) {
@@ -30,7 +42,7 @@ function prepareSelectors(paths, root) {
   }
   paths = [];
   if (debug) console.log('[INFO] sPaths : ' + JSON.stringify(sPaths));
-  return sPaths;
+  return unique(sPaths);
 }
 
 function pushState(value) {
@@ -144,7 +156,15 @@ function findInObject(varObject, needle) {
       if (debug) console.log('===========LEFT {findInObject}================');
       found = true;
 
-    } else if (typeof(varObject[item]) === 'object') {
+      if (found) {
+        savePath(stack);
+        // popState('{findInObject}-found');
+        found = false;
+      }
+
+    }
+
+    if (typeof(varObject[item]) === 'object') {
       if (debug) console.log('[INFO] in {findInObject} ELSE IF ');
 
       if (varObject[item] instanceof Array) {
@@ -179,11 +199,11 @@ function findInObject(varObject, needle) {
     }
 
     if (found) {
-
       savePath(stack);
       popState('{findInObject}-found');
       found = false;
     }
+
   }
 
   popState('{findInObject}');
