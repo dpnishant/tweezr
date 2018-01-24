@@ -362,7 +362,7 @@ Element.prototype.key = function() {
   return bookmark;
 };
 
-Element.prototype.parent = function() {
+Element.prototype.parent = function(n = 1) {
   if (!this.path) return undefined;
   var selector = this.path;
   if (selector.endsWith(']')) {
@@ -370,8 +370,25 @@ Element.prototype.parent = function() {
   } else {
     selector = selector.substring(0, selector.lastIndexOf('.'));
   }
+  if (n > 1) {
+    var prntNParent = new Element(selector, this.obj);
+    var prntNIter = '';
+    for (var i = 0; i < n - 1; i++) {
+      prntNIter += '.parent()';
+    }
+    try {
+      var prntNResult = eval("prntNParent" + prntNIter);
+    } catch (e) {
+      if (e instanceof TypeError) {
+        return undefined;
+      }
+    }
+    
+    return prntNResult;
+  }
   return new Element(selector, this.obj);
 };
+
 
 Element.prototype.val = function() {
   if (!this.path || !this.obj) return undefined;
@@ -379,15 +396,47 @@ Element.prototype.val = function() {
   return eval(rootObject);
 };
 
-Element.prototype.next = function() {
+Element.prototype.next = function(n = 1) {
   if (!this.path || !this.obj) return undefined;
+  if (n > 1) {
+    var nxtNIter = '';
+    var nxtNnext = new Element(getSibling(this.path, this.obj, 'next'), this.obj);
+    for (var i = 0; i <= n - 1; i++) {
+      nxtNIter += '.next()';
+    }
+    try { 
+      var nxtNResult = eval('nxtNnext' + nxtNIter);
+    } catch (e) {
+      if (e instanceof TypeError) {
+        return undefined;
+      }
+    }
+    
+    return nxtNResult;
+  }
   return new Element(getSibling(this.path, this.obj, 'next'), this.obj);
 };
 
-Element.prototype.prev = function() {
+Element.prototype.prev = function(n = 1) {
   if (!this.path || !this.obj) return undefined;
+  if (n > 1) {
+    var prvNIter = '';
+    var prvNPrev = new Element(getSibling(this.path, this.obj, 'previous'), this.obj);
+    for (var i = 0; i < n - 1; i++) {
+      prvNIter += '.prev()';
+    }
+    try {
+      var prvNResult = eval('prvNPrev' + prvNIter);
+    } catch (e) {
+      if (e instanceof TypeError) {
+        return undefined;
+      }
+    }
+    return prvNResult;  
+  }
   return new Element(getSibling(this.path, this.obj, 'previous'), this.obj);
 };
+
 
 Element.prototype.addAfter = function(toInsert) {
   if (!toInsert) return undefined;

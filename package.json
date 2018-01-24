@@ -1,6 +1,6 @@
 {
   "name": "tweezr",
-  "version": "1.4.0",
+  "version": "2.0",
   "description": "a library to reverse search values within a JSON structure or a javascript object & generate the dot-notation query selectors in context of the specified object. You may also use it to \"walk\" through the structure one step at a time to read/write values. Think of it as a XPath generator of a value deep within the JSON structure.",
   "main": "index.js",
   "scripts": {

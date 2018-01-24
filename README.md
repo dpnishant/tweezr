@@ -179,17 +179,17 @@ $ node runner.js
 **Type:** Getter    
 **Returns:** the value of the key/value of the current selector    
 
-## .parent()
+## .parent(*[n]*)
 **Type:** Getter     
-**Returns:** the parent node of the current selector    
+**Returns:** the Nth parent node of the current selector. **Default** is 1     
 
-## .prev()
+## .prev(*[n]*)
 **Type:** Getter    
-**Returns:** the previous node of the current selector    
+**Returns:** the previous Nth sibling from the current selector. **Default** is 1     
 
-## .next()
+## .next(*[n]*)
 **Type:** Getter    
-**Returns:** the next node of the current selector     
+**Returns:** the next Nth sibling from the current selector. **Default** is 1    
 
 ## .addAfter(varToInsert)
 **Type:** Setter    
