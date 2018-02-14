@@ -2,7 +2,7 @@
 
 # **tweezr**
 
-a library to reverse search values within a JSON structure or a javascript object & generate the dot-notation query selectors in context of the specified object. You may also use it to \"walk\" through the structure one step at a time to read/write values. Think of it as a XPath generator for a value that matches the search keyword.
+a module to reverse search values within a JSON structure or a javascript object & generate the dot-notation query selectors in context of the specified object. You may also use it to \"walk\" through the structure one step at a time to read/write values. Think of it as an XPath generator for a matched keyword in a JS object (or a deserialized JSON).
 
 |![](https://raw.githubusercontent.com/dpnishant/tweezr/master/res/tweezr_intro.png)|
 |:-:|
@@ -77,14 +77,14 @@ fs.readFile('auto.json', 'utf8', function(err, data) {
   console.log('2.1. key of parent node: ' + result[0].parent().key());
   console.log('3. parent node serialized: ' + JSON.stringify(result[0].parent().val()));
   console.log('4. path of previous sibling: ' + result[0].prev().path);
-  console.log('5. raw value of previous sibling value: ' + result[0].prev().val());
-  console.log('6. path of previous to previous sibling: ' + result[0].prev().prev().path);
-  console.log('7. raw value of previous to previous sibling value: ' + result[0].prev().prev().val());
+  console.log('5. raw value of previous sibling: ' + result[0].prev().val());
+  console.log('6. path of previous to previous sibling: ' + result[0].prev(2).path);
+  console.log('7. raw value of previous to previous sibling: ' + result[0].prev(2).val());
   console.log('8. path of next sibling: ' + result[0].next().path);
   console.log('8.1. key of next sibling: ' + result[0].next().key());
-  console.log('9. raw value of next sibling value: ' + result[0].next().val());
-  console.log('10. path of next to next sibling: ' + result[0].next().next().path);
-  console.log('11. raw value of next to next sibling value: ' + result[0].next().next().val());
+  console.log('9. raw value of next sibling: ' + result[0].next().val());
+  console.log('10. path of next to next sibling: ' + result[0].next(2).path);
+  console.log('11. raw value of next to next sibling: ' + result[0].next(2).val());
   console.log('12. addAfter: ' + result[0].addAfter(1111).path);
   console.log('13. add before next sibling: ' + result[0].next().addBefore(2222).path);
   console.log('14. updated object serialized: ' + JSON.stringify(myObj));
@@ -112,14 +112,14 @@ $ node runner.js
 #console.log('4. path of previous sibling: ' + result[0].prev().path);
 4. path of previous sibling: myObj['cars'][2]['year'][2]
 
-#console.log('5. raw value of previous sibling value: ' + result[0].prev().val());
-5. raw value of previous sibling value: 2015
+#console.log('5. raw value of previous sibling: ' + result[0].prev().val());
+5. raw value of previous sibling: 2015
 
-#console.log('6. path of previous to previous sibling: ' + result[0].prev().prev().path);
+#console.log('6. path of previous to previous sibling: ' + result[0].prev(2).path);
 6. path of previous to previous sibling: myObj['cars'][2]['year'][2]
 
-#console.log('7. raw value of previous to previous sibling value: ' + result[0].prev().prev().val());
-7. raw value of previous to previous sibling value: 2015
+#console.log('7. raw value of previous to previous sibling: ' + result[0].prev(2).val());
+7. raw value of previous to previous sibling: 2015
 
 #console.log('8. path of next sibling: ' + result[0].next().path);
 8. path of next sibling: myObj['cars'][2]['year'][3]
@@ -127,14 +127,14 @@ $ node runner.js
 #console.log('8.1. key of next sibling: ' + result[0].next().key());
 8.1. key of next sibling: 3
 
-#console.log('9. raw value of next sibling value: ' + result[0].next().val());
-9. raw value of next sibling value: 2019
+#console.log('9. raw value of next sibling: ' + result[0].next().val());
+9. raw value of next sibling: 2019
 
-#console.log('10. path of next to next sibling: ' + result[0].next().next().path);
-10. path of next to next sibling: myObj['cars'][2]['year'][4]
+#console.log('10. path of next to next sibling: ' + result[0].next(2).path);
+10. path of next to next sibling: undefined
 
-#console.log('11. raw value of next to next sibling value: ' + result[0].next().next().val());
-11. raw value of next to next sibling value: 2021
+#console.log('11. raw value of next to next sibling: ' + result[0].next(2).val());
+11. raw value of next to next sibling: undefined
 
 #console.log('12. addAfter: ' + result[0].addAfter(1111).path);
 12. addAfter: myObj['cars'][2]['year'][3]
